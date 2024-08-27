@@ -1,0 +1,526 @@
+<!DOCTYPE html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Tutorial de Tasker - Presentación Avanzada</title>
+    <style>
+      @import url("https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;700&display=swap");
+
+      body,
+      html {
+        margin: 2px;
+        padding: 2px;
+        font-family: "Roboto", sans-serif;
+        height: 100%;
+        overflow: hidden;
+        background: #121212;
+      }
+      .slide-container {
+        height: 100%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        perspective: 1000px;
+      }
+      .slide {
+        background: rgba(30, 30, 30, 0.95);
+        border-radius: 20px;
+        box-shadow: 0 8px 32px rgba(255, 215, 0, 0.2);
+        backdrop-filter: blur(4px);
+        border: 1px solid rgba(255, 215, 0, 0.18);
+        padding: 20px;
+        width: 95%;
+        max-width: 1200px;
+        height: 90vh;
+        position: absolute;
+        display: flex;
+        flex-direction: column;
+        transition: opacity 0.5s ease, transform 0.5s ease;
+        opacity: 0;
+        transform: rotateY(-90deg);
+        overflow-y: auto;
+        scrollbar-width: none;
+        -ms-overflow-style: none;
+      }
+      .slide::-webkit-scrollbar {
+        display: none;
+      }
+      .slide.active {
+        opacity: 1;
+        transform: rotateY(0deg);
+      }
+      .slide-content {
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+      }
+      h1 {
+        color: #ffd700;
+        font-size: 1.8em;
+        margin-bottom: 10px;
+        border-bottom: 2px solid #ffd700;
+        padding-bottom: 10px;
+      }
+      .subSteps {
+        color: #a0a0a0;
+        font-size: 0.9em;
+        margin-bottom: 10px;
+        padding-left: 20px;
+      }
+      p {
+        color: #e0e0e0;
+        font-size: 1em;
+        line-height: 1.4;
+        margin-bottom: 15px;
+      }
+
+      .video-container {
+        width: 100%;
+        padding-bottom: 56.25%;
+        position: relative;
+        margin-bottom: 15px;
+      }
+      .video-container iframe {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+      }
+      .download-links {
+        margin-top: 15px;
+      }
+      .download-links a {
+        color: #ffd700;
+        text-decoration: underline;
+        margin-right: 15px;
+        display: block;
+        margin-bottom: 8px;
+        font-size: 0.9em;
+      }
+      .download-links a:hover {
+        text-decoration: none;
+      }
+      .navigation {
+        position: fixed;
+        bottom: 20px;
+        left: 50%;
+        transform: translateX(-50%);
+        display: flex;
+        gap: 10px;
+        z-index: 10;
+      }
+      button {
+        padding: 10px 20px;
+        font-size: 14px;
+        cursor: pointer;
+        background-color: #ffd700;
+        color: #121212;
+        border: none;
+        border-radius: 30px;
+        transition: all 0.3s ease;
+        box-shadow: 0 4px 6px rgba(255, 215, 0, 0.1);
+      }
+      button:hover {
+        background-color: #ffa500;
+        transform: translateY(-2px);
+        box-shadow: 0 6px 8px rgba(255, 215, 0, 0.2);
+      }
+      .progress-bar {
+        position: fixed;
+        top: 0;
+        left: 0;
+        height: 4px;
+        background-color: #ffd700;
+        transition: width 0.3s ease;
+        z-index: 10;
+      }
+      .step-navigation-container {
+        position: fixed;
+        top: 10px;
+        left: 0;
+        right: 0;
+        display: flex;
+        justify-content: center;
+        z-index: 10;
+        overflow-x: auto;
+        white-space: nowrap;
+        -webkit-overflow-scrolling: touch;
+        scrollbar-width: none;
+        -ms-overflow-style: none;
+      }
+      .step-navigation-container::-webkit-scrollbar {
+        display: none;
+      }
+      .step-navigation {
+        display: inline-flex;
+        gap: 10px;
+        padding: 2px 20px;
+      }
+      .step-button {
+        padding: 5px 10px;
+        font-size: 12px;
+        cursor: pointer;
+        background-color: #333;
+        color: #ffd700;
+        border: 1px solid #ffd700;
+        border-radius: 15px;
+        transition: all 0.3s ease;
+        white-space: nowrap;
+      }
+      .step-button.active {
+        background-color: #ffd700;
+        color: #121212;
+      }
+      .step-button:hover {
+        background-color: #444;
+      }
+
+      @media (min-width: 769px) {
+        .video-container {
+          width: 60%;
+          padding-bottom: 33.75%;
+          margin: 0 auto 20px;
+        }
+        .slide {
+          padding: 30px;
+        }
+        h1 {
+          font-size: 2.2em;
+        }
+        .subSteps {
+          font-size: 1em;
+        }
+        p {
+          font-size: 1.1em;
+        }
+
+        .download-links a {
+          font-size: 1em;
+        }
+        button {
+          padding: 12px 24px;
+          font-size: 16px;
+        }
+        .step-button {
+          padding: 8px 16px;
+          font-size: 14px;
+        }
+      }
+
+      @media (max-width: 768px) {
+        .slide {
+          padding: 15px;
+          height: 95vh;
+        }
+        h1 {
+          font-size: 1.5em;
+        }
+        .subSteps {
+          font-size: 0.8em;
+        }
+        p {
+          font-size: 0.9em;
+        }
+
+        .download-links a {
+          font-size: 0.8em;
+        }
+        button {
+          padding: 8px 16px;
+          font-size: 12px;
+        }
+        .step-button {
+          padding: 4px 8px;
+          font-size: 10px;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="progress-bar" id="progressBar"></div>
+    <div class="step-navigation-container">
+      <div class="step-navigation" id="stepNavigation"></div>
+    </div>
+    <div class="slide-container" id="slideContainer"></div>
+    <div class="navigation">
+      <button id="prevBtn">Anterior</button>
+      <button id="nextBtn">Siguiente</button>
+    </div>
+
+    <script>
+      const slides = [
+        {
+          title: "Paso 1: Introducción Costos y Proceso",
+          subSteps: ["1.1 Costos y Proceso", "1.2 Contenido del Tutorial"],
+          content:
+            "En la introduccion detallaremos los costos y el proceso a seguir",
+          videoUrl: "https://youtu.be/4zyiw8SJ2z4",
+          downloads: [
+            { name: "Guía de Inicio Rápido", url: "#guia-inicio" },
+            { name: "Resumen del Curso", url: "#resumen-curso" },
+          ],
+        },
+        {
+          title: "Paso 2: Aplicaciones Necesarias y permisos",
+          subSteps: [
+            "2.1 Como instalar Tasker y dar permisos",
+            "2.2 Tasker en su versión Beta",
+            "2.3 TouchTask",
+            "2.4 Autosheet",
+            "2.5 AutoResponder para WA",
+          ],
+          content:
+            "Para seguir este tutorial, necesitarás instalar varias aplicaciones. Tasker será nuestra herramienta principal, junto con AutoTools para comprar autosheet, TouchTask para simular toques en pantalla, y AutoResponder para la integración con WhatsApp.",
+          videoUrl: "https://youtu.be/nOa2m7lcmSE",
+          downloads: [
+            {
+              name: "Tasker Version normal",
+              url: "https://play.google.com/store/apps/details?id=net.dinglisch.android.taskerm&pcampaignid=web_share",
+            },
+            {
+              name: "Tasker Version Beta",
+              url: "https://drive.google.com/file/d/1VE82_jfMagaiFUzOyMiQ22oUnpPKl3YT/view?usp=drive_link",
+            },
+            {
+              name: "TouchTask",
+              url: "https://play.google.com/store/search?q=touch+task&c=apps&hl=es_CO",
+            },
+            {
+              name: "Autosheet",
+              url: "https://play.google.com/store/search?q=autosheets&c=apps&hl=es_CO",
+            },
+            {
+              name: "Autoapps",
+              url: "https://play.google.com/store/search?q=autoapps&c=apps&hl=es_CO",
+            },
+            {
+              name: "AutoResponder para WA",
+              url: "https://statics.liteapks.com/AutoResponder%20for%20WhatsApp/AutoResponder%20for%20WA%20v4.0.2%20%28PREMIUM%29.apk",
+            },
+          ],
+        },
+        {
+          title: "Paso 3: Permisos a Tasker por ADB",
+          subSteps: [
+            "3.1 Habilitar Modo Desarrollador",
+            "3.2 Habilitar Depuración USB",
+            "3.3 Descargar Software ADB",
+            "3.4 Conectar Dispositivo por ADB",
+            "3.5 Conceder Permisos a Tasker",
+            "3.6 Verificar Permisos",
+            "3.7 Checar la opcion de Act Linea - # para hacer funcionar sin permisos",
+            "3.8 En keep accsebility running tener chuleado Tasker y TouchTask",
+          ],
+          content:
+            "Para que Tasker pueda interactuar con otras aplicaciones, necesitamos concederle permisos especiales a través de ADB. Aprenderemos cómo habilitar el modo desarrollador, activar la depuración USB y otorgar los permisos necesarios para que Tasker funcione correctamente.",
+          videoUrl: "https://youtu.be/mMSYSxiZe-E",
+          downloads: [
+            {
+              name: "Sofware de ADB",
+              url: "https://github.com/joaomgcd/Tasker-Permissions/releases/download/v0.2.0/tasker_permissions_portable.exe",
+            },
+            { name: "Solución de Problemas", url: "#solucion-problemas" },
+          ],
+        },
+        {
+          title: "Paso 4: Descarga del Proyecto Tasker y Configuración",
+          subSteps: [
+            "4.1 Descargar el proyecto Tasker",
+            "4.2 Configuracion del proyecto",
+            "4.3 Como actualizar el proyecto",
+            "4.4 Como clonar el proyecto para varias lineas",
+            "4.5 Verificar los permisos de accesibilidad",
+            "4.6 Agregar el widget de login a la pantalla de inicio",
+          ],
+          content:
+            "Ahora descargaremos e importaremos un proyecto Tasker preconfigurado. Este proyecto nos servirá de base para nuestras automatizaciones. Aprenderemos a importarlo correctamente y a configurar los permisos específicos que requiere.",
+
+          videoUrl: "https://youtu.be/cItzCAixWXE",
+          downloads: [
+            {
+              name: "Proyecto Tasker",
+              url: "https://taskernet.com/shares/?user=AS35m8lWfM3SRXLhBSalmnvgOif7EAIJJRik6iIm92yrgP%2FN6ePCDjW8LbmjA%2FFTj2zcPRIG6w%3D%3D&id=Project%3AClonar+Projecto#",
+            },
+          ],
+        },
+        {
+          title: "Paso 5: Inicio de sesion en el plugin",
+          subSteps: [
+            "5.1 Como desconectar el plugin o descontar el bot",
+            "5.2 Como inicar sesion correctamente",
+            "5.3 Datos de acceso necesarios",
+            "5.4 Generaracion del codigo y colocarlo en whatsapp",
+            "5.5 Posibles errores y soluciones",
+          ],
+          content:
+            "El inicio de sesión en el plugin de Tasker es un paso crucial para la integración con WhatsApp. Aprenderemos cómo iniciar sesión correctamente, qué datos de acceso necesitamos y cómo solucionar posibles errores durante el proceso.",
+
+          videoUrl: "https://youtu.be/DbnRF3FS3jc",
+          downloads: [],
+        },
+        {
+          title:
+            "Paso 6: Pequeña Introducccion a autoreresponder (si ya eres experto en el tema puedes saltar este paso)",
+          subSteps: [
+            "6.1 Donde encontrar las reglas ya creadas",
+            "6.2 Como funciona autoresponder",
+            "6.3 Explicacion de las reglas",
+            "6.4 Como crear una regla",
+            "6.5 Como crear una regla con submenus",
+            "6.6 Como crear varios chatboot para diferentes lineas",
+            "6.7 Como vincular como un dispositivo adicional en whatsapp",
+          ],
+          content:
+            "AutoResponder es una herramienta poderosa para automatizar respuestas en WhatsApp. En esta sección, aprenderemos cómo funciona la aplicación, cómo crear reglas personalizadas y cómo vincularla con Tasker para enviar mensajes y archivos automáticamente.",
+
+          videoUrl: "https://youtu.be/gHH3Q3ll2tw",
+          downloads: [],
+        },
+        {
+          title:
+            "Paso 7: Como inicar el plugin dentro de autorresponder y whatsapp",
+          subSteps: [
+            "7.1 Presionar en los 3 puntos de la esquina superior derecha por 3 segundos y escojer la linea",
+            "7.2 Configuracion para enviar medios en este caso una imagen",
+            "7.3 Aspectos importantes a tener en cuenta del porque no sube el archivo",
+            "7.4 Seleccionar varios archivos",
+          ],
+          content:
+            "Para comenzar a enviar mensajes y archivos a través de WhatsApp, necesitamos configurar el plugin de AutoResponder. Aprenderemos cómo activar el plugin, configurar el envío de archivos y solucionar posibles problemas durante el proceso.",
+
+          videoUrl: "https://youtu.be/A3OJn6WcJgc",
+          downloads: [],
+        },
+        {
+          title:
+            "Paso 8: Configuracion de la funcion de mensajes masivos y su uso",
+          subSteps: [
+            "8.1 Como exportar el libro o plantilla de google sheet",
+            "8.2 Configurar el ID y las columnas del libro de google sheet en el plugin",
+            "8.3 Entrar a autosheet y a tasker en la tarea de EnvioMasivos - #, Accion 13",
+            "8.4 Dar todos los permisos a autosheet",
+          ],
+          content:
+            "En esta sección, configuraremos la función de mensajes masivos en AutoResponder. Aprenderemos cómo exportar una plantilla de Google Sheets, configurar el ID y las columnas en el plugin y automatizar el proceso de envío de mensajes a través de WhatsApp.",
+
+          videoUrl: "https://youtu.be/hE4EwktRocA",
+          downloads: [
+            {
+              name: "Libro o plantilla de masivos y recordatorios",
+              url: "https://docs.google.com/spreadsheets/d/1NDUKBlK624suCF7uO60Ycjt-L7WPcDvYNa8K5XzmrZ0/edit?gid=0#gid=0",
+            },
+          ],
+        },
+        {
+          title: "Paso 9: Envio de Recordatorios",
+          subSteps: [
+            "9.1 Configuracion del libro de google sheet",
+            "9.2 Columnas base en la hoja y el plugin",
+            "9.3 Configuracion del mensaje trayendome columnas de la hoja y hora",
+            "9.4 Probar el envio de recordatorios",
+          ],
+          content:
+            "En esta sección, configuraremos la función de recordatorios en el plugin. Aprenderemos cómo exportar una plantilla de Google Sheets, configurar el ID y las columnas en el plugin y automatizar el proceso de envío de mensajes a través de WhatsApp.",
+
+          videoUrl: "https://youtu.be/ERKphozidd8",
+          downloads: [
+            {
+              name: "Libro o plantilla de masivos y recordatorios",
+              url: "https://docs.google.com/spreadsheets/d/1NDUKBlK624suCF7uO60Ycjt-L7WPcDvYNa8K5XzmrZ0/edit?gid=0#gid=0",
+            },
+            {
+              name: "Guia para configurar el codigo de appscript",
+              url: "https://docs.google.com/document/d/1xptHnuNuJMr6vfQYP5vpKnmd-G9NMZcxlKhBUbnS83o/edit#heading=h.mkgfmbiydk3v",
+            },
+          ],
+        },
+      ];
+      let currentSlide = 0;
+
+      // Modifica la función createSlides() en tu script
+      function createSlides() {
+        const container = document.getElementById("slideContainer");
+        slides.forEach((slide, index) => {
+          const slideDiv = document.createElement("div");
+          slideDiv.className = `slide ${index === 0 ? "active" : ""}`;
+
+          // Extraer el ID del video de la URL de YouTube
+          const videoId = extractYouTubeId(slide.videoUrl);
+
+          slideDiv.innerHTML = `
+            <div class="slide-content">
+                <h1>${slide.title}</h1>
+                <ul class="subSteps">
+                    ${slide.subSteps
+                      .map((subStep) => `<li>${subStep}</li>`)
+                      .join("")}
+                </ul>
+                <p>${slide.content}</p>
+                <div class="video-container">
+                    <iframe src="https://www.youtube.com/embed/${videoId}" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>
+                </div>
+                <div class="download-links">
+                    ${slide.downloads
+                      .map(
+                        (download) =>
+                          `<a href="${download.url}" target="_blank">🔗 ${download.name}</a>`
+                      )
+                      .join("")}
+                </div>
+            </div>
+        `;
+          container.appendChild(slideDiv);
+        });
+      }
+
+      // Añade esta función para extraer el ID del video de YouTube
+      function extractYouTubeId(url) {
+        const regExp =
+          /^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|\&v=)([^#\&\?]*).*/;
+        const match = url.match(regExp);
+        return match && match[2].length === 11 ? match[2] : null;
+      }
+
+      function createStepNavigation() {
+        const navigation = document.getElementById("stepNavigation");
+        slides.forEach((slide, index) => {
+          const button = document.createElement("button");
+          button.className = `step-button ${index === 0 ? "active" : ""}`;
+          button.textContent = `Paso ${index + 1}`;
+          button.addEventListener("click", () => showSlide(index));
+          navigation.appendChild(button);
+        });
+      }
+
+      function showSlide(n) {
+        const slideElements = document.querySelectorAll(".slide");
+        const stepButtons = document.querySelectorAll(".step-button");
+        slideElements[currentSlide].classList.remove("active");
+        stepButtons[currentSlide].classList.remove("active");
+        currentSlide = (n + slides.length) % slides.length;
+        slideElements[currentSlide].classList.add("active");
+        stepButtons[currentSlide].classList.add("active");
+        updateProgressBar();
+      }
+
+      function updateProgressBar() {
+        const progressBar = document.getElementById("progressBar");
+        const progress = (currentSlide / (slides.length - 1)) * 100;
+        progressBar.style.width = `${progress}%`;
+      }
+
+      document
+        .getElementById("prevBtn")
+        .addEventListener("click", () => showSlide(currentSlide - 1));
+      document
+        .getElementById("nextBtn")
+        .addEventListener("click", () => showSlide(currentSlide + 1));
+
+      createSlides();
+      createStepNavigation();
+      updateProgressBar();
+    </script>
+  </body>
+</html>
