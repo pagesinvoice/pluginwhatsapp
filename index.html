@@ -9,8 +9,8 @@
 
       body,
       html {
-        margin: 2px;
-        padding: 2px;
+        margin: 0;
+        padding: 0;
         font-family: "Roboto", sans-serif;
         height: 100%;
         overflow: hidden;
@@ -90,6 +90,7 @@
       }
       .download-links {
         margin-top: 15px;
+        padding-bottom: 60px; /* Añadido espacio adicional en la parte inferior */
       }
       .download-links a {
         color: #ffd700;
@@ -138,17 +139,19 @@
       }
       .step-navigation-container {
         position: fixed;
-        top: 20px;
+        top: 60px;
         left: 0;
         right: 0;
         display: flex;
-        justify-content: center;
+        justify-content: flex-start;
         z-index: 10;
         overflow-x: auto;
         white-space: nowrap;
         -webkit-overflow-scrolling: touch;
         scrollbar-width: none;
         -ms-overflow-style: none;
+        padding: 10px 0;
+        background-color: rgba(18, 18, 18, 0.8);
       }
       .step-navigation-container::-webkit-scrollbar {
         display: none;
@@ -156,7 +159,7 @@
       .step-navigation {
         display: inline-flex;
         gap: 10px;
-        padding: 2px 20px;
+        padding: 0 20px;
       }
       .step-button {
         padding: 5px 10px;
@@ -207,6 +210,9 @@
           padding: 8px 16px;
           font-size: 14px;
         }
+        .step-navigation-container {
+          top: 70px;
+        }
       }
 
       @media (max-width: 768px) {
@@ -216,29 +222,32 @@
         }
         h1 {
           font-size: 1.5em;
+          margin-top: 100px; /* Aumentado para dar espacio a los botones de navegación */
         }
         .subSteps {
-          font-size: 1em;
+          font-size: 0.9em;
         }
         p {
-          font-size: 1em;
+          font-size: 0.9em;
         }
 
         .download-links a {
-          font-size: 1em;
+          font-size: 0.9em;
         }
         button {
-          padding: 16px 24px;
-          font-size: 15px;
+          padding: 8px 16px;
+          font-size: 12px;
         }
         .step-button {
           padding: 4px 8px;
           font-size: 10px;
         }
-        /* Ajustes para móviles */
         .step-navigation-container {
-          top: 10px; /* Ajusta el espacio respecto al inicio de la pantalla */
-          margin-bottom: 10px; /* Espacio entre la navegación y el contenido */
+          top: 50px;
+        }
+        .navigation {
+          top: 10px;
+          bottom: auto;
         }
       }
     </style>
@@ -455,82 +464,70 @@
           slideDiv.innerHTML = `
             <div class="slide-content">
                 <h1>${slide.title}</h1>
-                <div class="subSteps">${slide.subSteps.join("<br>")}</div>
+                <ul class="subSteps">
+                    ${slide.subSteps
+                      .map((subStep) => `<li>${subStep}</li>`)
+                      .join("")}
+                </ul>
                 <p>${slide.content}</p>
-                ${
-                  videoId
-                    ? `<div class="video-container"><iframe src="https://www.youtube.com/embed/${videoId}" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe></div>`
-                    : ""
-                }
+                <div class="video-container">
+                    <iframe src="https://www.youtube.com/embed/${videoId}" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>
+                </div>
                 <div class="download-links">
-                  ${slide.downloads
-                    .map(
-                      (download) =>
-                        `<a href="${download.url}" target="_blank">🔗 ${download.name}</a>`
-                    )
-                    .join("")}
+                    ${slide.downloads
+                      .map(
+                        (download) =>
+                          `<a href="${download.url}" target="_blank">🔗 ${download.name}</a>`
+                      )
+                      .join("")}
                 </div>
             </div>
-          `;
+        `;
           container.appendChild(slideDiv);
         });
       }
 
+      function extractYouTubeId(url) {
+        const regExp =
+          /^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|\&v=)([^#\&\?]*).*/;
+        const match = url.match(regExp);
+        return match && match[2].length === 11 ? match[2] : null;
+      }
+
       function createStepNavigation() {
-        const stepNav = document.getElementById("stepNavigation");
+        const navigation = document.getElementById("stepNavigation");
         slides.forEach((slide, index) => {
-          const stepButton = document.createElement("button");
-          stepButton.className = `step-button ${index === 0 ? "active" : ""}`;
-          stepButton.textContent = `Paso ${index + 1}`;
-          stepButton.addEventListener("click", () => goToSlide(index));
-          stepNav.appendChild(stepButton);
+          const button = document.createElement("button");
+          button.className = `step-button ${index === 0 ? "active" : ""}`;
+          button.textContent = `Paso ${index + 1}`;
+          button.addEventListener("click", () => showSlide(index));
+          navigation.appendChild(button);
         });
+      }
+
+      function showSlide(n) {
+        const slideElements = document.querySelectorAll(".slide");
+        const stepButtons = document.querySelectorAll(".step-button");
+        slideElements[currentSlide].classList.remove("active");
+        stepButtons[currentSlide].classList.remove("active");
+        currentSlide = (n + slides.length) % slides.length;
+        slideElements[currentSlide].classList.add("active");
+        stepButtons[currentSlide].classList.add("active");
+        updateProgressBar();
       }
 
       function updateProgressBar() {
         const progressBar = document.getElementById("progressBar");
-        const progress = ((currentSlide + 1) / slides.length) * 100;
+        const progress = (currentSlide / (slides.length - 1)) * 100;
         progressBar.style.width = `${progress}%`;
       }
 
-      function goToSlide(index) {
-        const slideDivs = document.querySelectorAll(".slide");
-        slideDivs[currentSlide].classList.remove("active");
-        slideDivs[index].classList.add("active");
-        currentSlide = index;
-        updateStepButtons();
-        updateProgressBar();
-      }
-
-      function updateStepButtons() {
-        const stepButtons = document.querySelectorAll(".step-button");
-        stepButtons.forEach((button, index) => {
-          if (index === currentSlide) {
-            button.classList.add("active");
-          } else {
-            button.classList.remove("active");
-          }
-        });
-      }
-
-      document.getElementById("prevBtn").addEventListener("click", () => {
-        if (currentSlide > 0) {
-          goToSlide(currentSlide - 1);
-        }
-      });
-
-      document.getElementById("nextBtn").addEventListener("click", () => {
-        if (currentSlide < slides.length - 1) {
-          goToSlide(currentSlide + 1);
-        }
-      });
-
-      function extractYouTubeId(url) {
-        const regExp =
-          /^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|&v=)([^#&?]*).*/;
-        const match = url.match(regExp);
-        return match && match[2].length === 11 ? match[2] : null;
-      }
+      document
+        .getElementById("prevBtn")
+        .addEventListener("click", () => showSlide(currentSlide - 1));
+      document
+        .getElementById("nextBtn")
+        .addEventListener("click", () => showSlide(currentSlide + 1));
 
       createSlides();
       createStepNavigation();
