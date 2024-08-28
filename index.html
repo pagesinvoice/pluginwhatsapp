@@ -138,7 +138,7 @@
       }
       .step-navigation-container {
         position: fixed;
-        top: 5px;
+        top: 20px;
         left: 0;
         right: 0;
         display: flex;
@@ -218,7 +218,7 @@
           font-size: 1.5em;
         }
         .subSteps {
-          font-size: 0.8em;
+          font-size: 1em;
         }
         p {
           font-size: 1em;
@@ -229,11 +229,16 @@
         }
         button {
           padding: 16px 24px;
-          font-size: 12px;
+          font-size: 15px;
         }
         .step-button {
           padding: 4px 8px;
           font-size: 10px;
+        }
+        /* Ajustes para móviles */
+        .step-navigation-container {
+          top: 10px; /* Ajusta el espacio respecto al inicio de la pantalla */
+          margin-bottom: 10px; /* Espacio entre la navegación y el contenido */
         }
       }
     </style>
@@ -439,84 +444,93 @@
       ];
       let currentSlide = 0;
 
-      // Modifica la función createSlides() en tu script
       function createSlides() {
         const container = document.getElementById("slideContainer");
         slides.forEach((slide, index) => {
           const slideDiv = document.createElement("div");
           slideDiv.className = `slide ${index === 0 ? "active" : ""}`;
 
-          // Extraer el ID del video de la URL de YouTube
           const videoId = extractYouTubeId(slide.videoUrl);
 
           slideDiv.innerHTML = `
             <div class="slide-content">
                 <h1>${slide.title}</h1>
-                <ul class="subSteps">
-                    ${slide.subSteps
-                      .map((subStep) => `<li>${subStep}</li>`)
-                      .join("")}
-                </ul>
+                <div class="subSteps">${slide.subSteps.join("<br>")}</div>
                 <p>${slide.content}</p>
-                <div class="video-container">
-                    <iframe src="https://www.youtube.com/embed/${videoId}" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>
-                </div>
+                ${
+                  videoId
+                    ? `<div class="video-container"><iframe src="https://www.youtube.com/embed/${videoId}" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe></div>`
+                    : ""
+                }
                 <div class="download-links">
-                    ${slide.downloads
-                      .map(
-                        (download) =>
-                          `<a href="${download.url}" target="_blank">🔗 ${download.name}</a>`
-                      )
-                      .join("")}
+                  ${slide.downloads
+                    .map(
+                      (download) =>
+                        `<a href="${download.url}" target="_blank">🔗 ${download.name}</a>`
+                    )
+                    .join("")}
                 </div>
             </div>
-        `;
+          `;
           container.appendChild(slideDiv);
         });
       }
 
-      // Añade esta función para extraer el ID del video de YouTube
-      function extractYouTubeId(url) {
-        const regExp =
-          /^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|\&v=)([^#\&\?]*).*/;
-        const match = url.match(regExp);
-        return match && match[2].length === 11 ? match[2] : null;
-      }
-
       function createStepNavigation() {
-        const navigation = document.getElementById("stepNavigation");
+        const stepNav = document.getElementById("stepNavigation");
         slides.forEach((slide, index) => {
-          const button = document.createElement("button");
-          button.className = `step-button ${index === 0 ? "active" : ""}`;
-          button.textContent = `Paso ${index + 1}`;
-          button.addEventListener("click", () => showSlide(index));
-          navigation.appendChild(button);
+          const stepButton = document.createElement("button");
+          stepButton.className = `step-button ${index === 0 ? "active" : ""}`;
+          stepButton.textContent = `Paso ${index + 1}`;
+          stepButton.addEventListener("click", () => goToSlide(index));
+          stepNav.appendChild(stepButton);
         });
-      }
-
-      function showSlide(n) {
-        const slideElements = document.querySelectorAll(".slide");
-        const stepButtons = document.querySelectorAll(".step-button");
-        slideElements[currentSlide].classList.remove("active");
-        stepButtons[currentSlide].classList.remove("active");
-        currentSlide = (n + slides.length) % slides.length;
-        slideElements[currentSlide].classList.add("active");
-        stepButtons[currentSlide].classList.add("active");
-        updateProgressBar();
       }
 
       function updateProgressBar() {
         const progressBar = document.getElementById("progressBar");
-        const progress = (currentSlide / (slides.length - 1)) * 100;
+        const progress = ((currentSlide + 1) / slides.length) * 100;
         progressBar.style.width = `${progress}%`;
       }
 
-      document
-        .getElementById("prevBtn")
-        .addEventListener("click", () => showSlide(currentSlide - 1));
-      document
-        .getElementById("nextBtn")
-        .addEventListener("click", () => showSlide(currentSlide + 1));
+      function goToSlide(index) {
+        const slideDivs = document.querySelectorAll(".slide");
+        slideDivs[currentSlide].classList.remove("active");
+        slideDivs[index].classList.add("active");
+        currentSlide = index;
+        updateStepButtons();
+        updateProgressBar();
+      }
+
+      function updateStepButtons() {
+        const stepButtons = document.querySelectorAll(".step-button");
+        stepButtons.forEach((button, index) => {
+          if (index === currentSlide) {
+            button.classList.add("active");
+          } else {
+            button.classList.remove("active");
+          }
+        });
+      }
+
+      document.getElementById("prevBtn").addEventListener("click", () => {
+        if (currentSlide > 0) {
+          goToSlide(currentSlide - 1);
+        }
+      });
+
+      document.getElementById("nextBtn").addEventListener("click", () => {
+        if (currentSlide < slides.length - 1) {
+          goToSlide(currentSlide + 1);
+        }
+      });
+
+      function extractYouTubeId(url) {
+        const regExp =
+          /^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|&v=)([^#&?]*).*/;
+        const match = url.match(regExp);
+        return match && match[2].length === 11 ? match[2] : null;
+      }
 
       createSlides();
       createStepNavigation();
