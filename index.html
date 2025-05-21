@@ -420,19 +420,15 @@
         }
 
         .slide {
-          .slide {
-            padding: 15px;
-            top: 30px; /* Baja el slide desde arriba */
-            position: absolute;
-            height: calc(
-              100vh - 100px
-            ); /* Ajusta la altura total si es necesario */
-          }
+          padding: 15px;
+          height: calc(
+            100vh - 70px
+          ); /* Ajustar altura para dejar espacio a las barras de navegación fijas */
         }
         h1 {
           /* Título principal dentro de cada slide en móviles */
           font-size: 1.5em;
-          margin-top: 50px; /* Reducido, ya que step-navigation-container está en top:50px */
+          margin-top: 80px; /* Reducido, ya que step-navigation-container está en top:50px */
         }
         .subSteps {
           font-size: 0.9em;
@@ -482,11 +478,6 @@
 
         .step-navigation-container {
           top: 50px; /* Debajo de la barra de navegación principal (.navigation) */
-        }
-        h1 {
-          /* Título principal dentro de cada slide en móviles, necesita más margen superior */
-          font-size: 1.5em;
-          margin-top: 50px; /* Espacio para .step-navigation-container (top:50px + su padding) */
         }
       }
     </style>
