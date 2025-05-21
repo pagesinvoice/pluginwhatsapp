@@ -7,14 +7,21 @@
     <style>
       @import url("https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;700&display=swap");
 
+      /* RECOMENDACIÓN: Añadir box-sizing globalmente */
+      html {
+        box-sizing: border-box;
+      }
+      *, *:before, *:after {
+        box-sizing: inherit;
+      }
+
       body,
       html {
         margin: 0;
         padding: 0;
         font-family: "Roboto", sans-serif;
         height: 100%;
-        /* Permitir el scroll en caso de desbordamiento */
-        overflow-y: hidden;
+        /* overflow-y: hidden; /* Considerar remover o cambiar a auto si causa problemas en #home-screen y no es estrictamente necesario */
         background: #121212;
         color: #e0e0e0; /* Color de texto general */
 
@@ -36,12 +43,12 @@
         display: flex;
         flex-direction: column;
         align-items: center;
-        /* Centrar verticalmente en pantallas grandes */
-        justify-content: center;
+        justify-content: center; /* Centrar verticalmente en pantallas grandes */
         z-index: 100;
         transition: opacity 0.5s ease;
         padding: 20px;
-        box-sizing: border-box;
+        /* box-sizing: border-box; /* Cubierto por el global */
+        overflow-y: auto; /* Permitir scroll en home-screen si su contenido es muy largo */
       }
 
       #home-screen.hidden {
@@ -52,7 +59,7 @@
 
       #home-screen h1 {
         color: #ffd700;
-        font-size: 2.5em;
+        font-size: 2.5em; /* Default, se ajusta en media query */
         margin-bottom: 40px; /* Margen por defecto para pantallas grandes */
         text-align: center;
       }
@@ -71,8 +78,8 @@
         box-shadow: 0 8px 32px rgba(255, 215, 0, 0.2);
         backdrop-filter: blur(4px);
         border: 1px solid rgba(255, 215, 0, 0.18);
-        padding: 30px;
-        width: 300px;
+        padding: 30px; /* Default, se ajusta en media query */
+        width: 300px; /* Default, se ajusta en media query */
         text-align: center;
         cursor: pointer;
         transition: all 0.3s ease;
@@ -91,13 +98,13 @@
 
       .version-card h2 {
         color: #ffd700;
-        font-size: 1.8em;
+        font-size: 1.8em; /* Default, se ajusta en media query */
         margin-bottom: 15px;
       }
 
       .version-card p {
         color: #a0a0a0;
-        font-size: 1em;
+        font-size: 1em; /* Default, se ajusta en media query */
         margin-bottom: 20px;
       }
 
@@ -162,11 +169,11 @@
         box-shadow: 0 8px 32px rgba(255, 215, 0, 0.2);
         backdrop-filter: blur(4px);
         border: 1px solid rgba(255, 215, 0, 0.18);
-        padding: 20px;
+        padding: 20px; /* Padding general, se ajusta en media queries */
         width: 95%;
         max-width: 1200px;
-        margin-top: 30px;
-        height: 90vh;
+        /* margin-top: 30px; /* No necesario si es position: absolute y top está definido */
+        /* height: 90vh; /* Original para desktop, se sobrescribe en mobile */
         position: absolute;
         display: flex;
         flex-direction: column;
@@ -190,28 +197,28 @@
         flex-direction: column;
       }
       h1 {
-        /* Título principal dentro de cada slide */
+        /* Título principal general */
         color: #ffd700;
-        font-size: 1.8em;
+        font-size: 1.8em; /* Default, se ajusta en media queries */
         margin-bottom: 10px;
         border-bottom: 2px solid #ffd700;
         padding-bottom: 10px;
       }
       .subSteps {
         color: #a0a0a0;
-        font-size: 0.9em;
+        font-size: 0.9em; /* Default, se ajusta en media queries */
         margin-bottom: 10px;
         padding-left: 20px;
       }
       p {
         color: #e0e0e0;
-        font-size: 1em;
+        font-size: 1em; /* Default, se ajusta en media queries */
         line-height: 1.4;
         margin-bottom: 15px;
       }
 
       .video-container {
-        width: 100%;
+        width: 100%; /* Default, se ajusta en media queries */
         padding-bottom: 56.25%; /* 16:9 Aspect Ratio */
         position: relative;
         margin-bottom: 15px;
@@ -227,7 +234,7 @@
       }
       .download-links {
         margin-top: 15px;
-        padding-bottom: 70px; /* Aumentado para más espacio si hay muchos links y botones de nav fijos */
+        /* padding-bottom: 70px; /* Original, se ajusta en media queries */
       }
       .download-links a {
         color: #ffd700;
@@ -235,7 +242,7 @@
         margin-right: 15px;
         display: block;
         margin-bottom: 8px;
-        font-size: 0.9em;
+        font-size: 0.9em; /* Default, se ajusta en media queries */
       }
       .download-links a:hover {
         text-decoration: none;
@@ -243,11 +250,11 @@
       .navigation {
         /* Contenedor de botones Anterior, Inicio, Siguiente */
         position: fixed;
-        bottom: 20px; /* Posición por defecto para pantallas grandes */
+        /* bottom: 20px; /* Posición por defecto para pantallas grandes, se ajusta en mobile */
         left: 50%;
         transform: translateX(-50%);
         display: flex;
-        gap: 10px;
+        gap: 10px; /* Default, se ajusta en media queries */
         z-index: 10;
         justify-content: center;
         align-items: center;
@@ -256,8 +263,8 @@
       }
       button {
         /* Estilo general para botones */
-        padding: 10px 20px;
-        font-size: 14px;
+        padding: 10px 20px; /* Default, se ajusta en media queries */
+        font-size: 14px; /* Default, se ajusta en media queries */
         cursor: pointer;
         background-color: #ffd700;
         color: #121212;
@@ -279,16 +286,16 @@
         height: 4px;
         background-color: #ffd700;
         transition: width 0.3s ease;
-        z-index: 10;
+        z-index: 10; /* Asegurar que esté por encima de otros elementos fijos si es necesario */
       }
       .step-navigation-container {
         /* Contenedor de botones de Paso 1, Paso 2, etc. */
         position: fixed;
-        top: 60px; /* Posición por defecto para pantallas grandes */
+        /* top: 60px; /* Posición por defecto para pantallas grandes, se ajusta en mobile */
         left: 0;
         right: 0;
         display: flex;
-        justify-content: center;
+        justify-content: space-around; /* Mejor distribución */
         align-items: center;
         z-index: 10;
         overflow-x: auto; /* Permite scroll horizontal si los botones exceden el ancho */
@@ -296,19 +303,19 @@
         -webkit-overflow-scrolling: touch;
         scrollbar-width: none; /* Oculta scrollbar en Firefox */
         -ms-overflow-style: none; /* Oculta scrollbar en IE/Edge */
-        padding: 10px 0;
-        background-color: rgba(18, 18, 18, 0.8);
+        padding: 10px 5px; /* Añadido padding horizontal para que no peguen a los bordes */
+        background-color: rgba(18, 18, 18, 0.8); /* Fondo para mejor visibilidad */
       }
       .step-navigation-container::-webkit-scrollbar {
         display: none; /* Oculta scrollbar en Webkit */
       }
       .step-navigation {
-        display: inline-flex;
-        gap: 10px;
+        display: inline-flex; /* Para que los botones se alineen correctamente */
+        gap: 10px; /* Espacio entre botones de paso */
       }
       .step-button {
-        padding: 5px 10px;
-        font-size: 12px;
+        padding: 5px 10px; /* Default, se ajusta en media queries */
+        font-size: 12px; /* Default, se ajusta en media queries */
         cursor: pointer;
         background-color: #333;
         color: #ffd700;
@@ -335,7 +342,7 @@
         border-radius: 20px;
         cursor: pointer;
         transition: background-color 0.3s ease;
-        z-index: 11;
+        z-index: 11; /* Por si acaso, para estar sobre otros elementos de .navigation */
       }
 
       .back-to-home-button:hover {
@@ -365,10 +372,20 @@
         }
         .slide {
           padding: 30px;
+          height: 90vh; /* Altura para desktop */
+          /* Para desktop, el centrado de .slide-container (flex) debería funcionar bien
+             con .slide (position: absolute) si .slide no tiene top/left explícitos,
+             o si se usan transformaciones para centrar.
+             Dado que .slide es absolute, su 'top' no se define aquí,
+             así que se posicionará relativo a .slide-container.
+             .slide-container es 100% height, flex, align-items, justify-content center.
+             Esto debería centrar .slide (que tiene height: 90vh) verticalmente.
+          */
         }
-        h1 {
+        .slide h1 {
           /* Título principal dentro de cada slide en pantallas grandes */
           font-size: 2.2em;
+          margin-top: 0; /* Usar el padding del slide para el espacio superior */
         }
         .subSteps {
           font-size: 1em;
@@ -377,6 +394,9 @@
           font-size: 1.1em;
         }
 
+        .download-links {
+            padding-bottom: 70px; /* Espacio para botones de nav fijos abajo en desktop */
+        }
         .download-links a {
           font-size: 1em;
         }
@@ -390,26 +410,30 @@
           padding: 8px 16px;
           font-size: 14px;
         }
+        .navigation { /* Botones Anterior/Inicio/Siguiente en desktop */
+            bottom: 20px; /* Fijos abajo */
+            top: auto; /* Asegurar que no herede el top de mobile */
+        }
         .step-navigation-container {
           /* Navegación de pasos en pantallas grandes */
-          top: 2px; /* Más pegado a la parte superior */
+          top: 4px; /* Más pegado a la parte superior, justo debajo de progress-bar */
         }
       }
 
       @media (max-width: 768px) {
         /* Estilos para pantallas móviles */
         #home-screen {
-          justify-content: flex-start;
-          padding-top: 30px;
+          justify-content: flex-start; /* Alinea contenido al inicio en móviles */
+          padding-top: 20px; /* Ajusta padding superior */
         }
         #home-screen h1 {
           font-size: 2em;
           margin-bottom: 20px;
-          margin-top: 1px;
+          margin-top: 10px; /* Menos margen superior para el título en home */
         }
         .version-card {
-          width: 80%;
-          max-width: 300px;
+          width: 90%; /* Usar más del ancho disponible */
+          max-width: 320px; /* Un límite razonable */
           padding: 20px;
         }
         .version-card h2 {
@@ -420,15 +444,30 @@
         }
 
         .slide {
-          padding: 15px;
-          height: calc(
-            100vh - 70px
-          ); /* Ajustar altura para dejar espacio a las barras de navegación fijas */
+          padding: 15px; /* Padding interno del slide */
+          width: 100%;    /* Ocupar todo el ancho disponible */
+          max-width: none; /* Sin max-width en móviles pequeños */
+          border-radius: 0; /* Sin bordes redondeados para llenar pantalla */
+          border-left: none;
+          border-right: none;
+          box-shadow: none; /* Quitar sombra para un look más plano */
+          backdrop-filter: none; /* Quitar blur si no se ve bien en móviles */
+
+          /* === INICIO DE CORRECCIÓN PARA VISTA MÓVIL === */
+          /* El progress-bar está en top:0, height: 4px. */
+          /* El .navigation (Prev/Home/Next) está en top: 10px, altura ~28px. Termina en 10+28=38px. */
+          /* El .step-navigation-container está en top: 50px, altura ~38px. Termina en 50+38=88px. */
+          top: 88px; /* Posicionar el slide debajo de todas las barras de navegación fijas superiores */
+          height: calc(100vh - 88px); /* El slide ocupa el resto de la altura del viewport */
+          /* === FIN DE CORRECCIÓN PARA VISTA MÓVIL === */
         }
-        h1 {
+
+        .slide h1 {
           /* Título principal dentro de cada slide en móviles */
           font-size: 1.5em;
-          margin-top: 80px; /* Reducido, ya que step-navigation-container está en top:50px */
+          /* margin-top: 80px; /* ANTERIOR: Demasiado margen interno */
+          margin-top: 0px; /* CORREGIDO: Usar el padding del .slide (15px) para el espacio superior. */
+                           /* Opcional: un pequeño margen si se desea más espacio que el padding del slide: margin-top: 10px; */
         }
         .subSteps {
           font-size: 0.9em;
@@ -437,32 +476,34 @@
           font-size: 0.9em;
         }
 
+        .download-links {
+            /* padding-bottom: 70px; /* ANTERIOR: Demasiado padding si no hay barra inferior fija que esquivar */
+            padding-bottom: 20px; /* CORREGIDO: Espacio razonable al final del contenido */
+        }
         .download-links a {
           font-size: 0.9em;
         }
 
-        /* Ajustes específicos para la barra de navegación principal en móviles */
-        .navigation {
-          top: 10px;
-          bottom: auto;
-          left: 50%;
-          transform: translateX(-50%);
-          width: calc(100% - 20px);
-          gap: 8px;
+        /* Ajustes específicos para la barra de navegación principal (.navigation) en móviles */
+        .navigation { /* Contenedor Anterior/Inicio/Siguiente */
+          top: 4px; /* Debajo de la barra de progreso (que tiene 4px de altura y está en top:0) */
+          /* bottom: auto; /* Ya está implícito por 'top' */
+          width: calc(100% - 10px); /* Ligeramente menos ancho, para dar más padding a los lados de la pantalla */
+          gap: 5px; /* Menos espacio entre botones */
         }
 
         .navigation button {
-          padding: 8px 12px;
-          font-size: 12px;
-          white-space: nowrap;
+          padding: 8px 10px; /* Ajustar padding para botones más pequeños */
+          font-size: 11px; /* Reducir un poco la fuente para que quepa mejor */
+          /* white-space: nowrap; /* Ya estaba */
         }
 
         .navigation .back-to-home-button {
-          padding-left: 10px;
-          padding-right: 10px;
-          font-size: 11px;
-          flex-grow: 0;
-          flex-shrink: 1;
+          padding-left: 8px; /* Ajustar padding específico */
+          padding-right: 8px;
+          font-size: 10px; /* Aún más pequeño para el botón de inicio */
+          /* flex-grow: 0; /* Ya estaba */
+          /* flex-shrink: 1; /* Ya estaba */
         }
 
         .navigation #prevBtn,
@@ -472,12 +513,13 @@
         }
 
         .step-button {
-          padding: 4px 8px;
+          padding: 5px 8px; /* Un poco más de padding para mejor toque */
           font-size: 10px;
         }
 
         .step-navigation-container {
-          top: 50px; /* Debajo de la barra de navegación principal (.navigation) */
+          /* .navigation (Prev/Home/Next) ahora está en top: 4px y tiene ~28px de altura. Termina en 4+28=32px. */
+          top: 36px; /* Debajo de .navigation. (32px + 4px de espacio) */
         }
       }
     </style>
@@ -507,18 +549,16 @@
     </div>
 
     <div class="progress-bar" id="progressBar"></div>
-    <div class="step-navigation-container">
-      <div class="step-navigation" id="stepNavigation"></div>
-    </div>
-    <div class="slide-container" id="slideContainer"></div>
-    <div class="navigation">
-      <button id="prevBtn">Anterior</button>
+    <div class="navigation"> <button id="prevBtn">Anterior</button>
       <button class="back-to-home-button" onclick="goHome()">
         Volver al Inicio
       </button>
       <button id="nextBtn">Siguiente</button>
     </div>
+    <div class="step-navigation-container"> <div class="step-navigation" id="stepNavigation"></div>
+    </div>
 
+    <div class="slide-container" id="slideContainer"></div>
     <script>
       // Definición de los datos de las diapositivas para la versión 1
       // IMPORTANTE: Reemplaza 'videoUrl' con URLs reales de YouTube (ej. https://www.youtube.com/watch?v=ID_VIDEO)
@@ -529,11 +569,11 @@
           subSteps: ["1.1 Costos y Proceso", "1.2 Contenido del Tutorial"],
           content:
             "En la introduccion detallaremos los costos y el proceso a seguir",
-          videoUrl: "https://youtu.be/kJTqMDDQtKY",
+          videoUrl: "https://youtu.be/kJTqMDDQtKY", // Ejemplo, reemplazar
           downloads: [
             {
               name: "Video del pago mensual Servicio mas estable, esclusivo, actualizaciones y soporte",
-              url: "https://youtu.be/4zyiw8SJ2z4",
+              url: "https://youtu.be/4zyiw8SJ2z4", // Ejemplo, reemplazar
             },
             { name: "Guía de Inicio Rápido", url: "#guia-inicio" },
             { name: "Resumen del Curso", url: "#resumen-curso" },
@@ -550,7 +590,7 @@
           ],
           content:
             "Para seguir este tutorial, necesitarás instalar varias aplicaciones. Tasker será nuestra herramienta principal, junto con AutoTools para comprar autosheet, TouchTask para simular toques en pantalla, y AutoResponder para la integración con WhatsApp.",
-          videoUrl: "https://youtu.be/nOa2m7lcmSE",
+          videoUrl: "https://youtu.be/nOa2m7lcmSE", // Ejemplo, reemplazar
           downloads: [
             {
               name: "Tasker Version normal",
@@ -592,7 +632,7 @@
           ],
           content:
             "Para que Tasker pueda interactuar con otras aplicaciones, necesitamos concederle permisos especiales a través de ADB. Aprenderemos cómo habilitar el modo desarrollador, activar la depuración USB y otorgar los permisos necesarios para que Tasker funcione correctamente.",
-          videoUrl: "https://youtu.be/mMSYSxiZe-E",
+          videoUrl: "https://youtu.be/mMSYSxiZe-E", // Ejemplo, reemplazar
           downloads: [
             {
               name: "Sofware de ADB",
@@ -614,7 +654,7 @@
           content:
             "Ahora descargaremos e importaremos un proyecto Tasker preconfigurado. Este proyecto nos servirá de base para nuestras automatizaciones. Aprenderemos a importarlo correctamente y a configurar los permisos específicos que requiere.",
 
-          videoUrl: "https://youtu.be/cItzCAixWXE",
+          videoUrl: "https://youtu.be/cItzCAixWXE", // Ejemplo, reemplazar
           downloads: [
             {
               name: "Proyecto Tasker",
@@ -634,7 +674,7 @@
           content:
             "El inicio de sesión en el plugin de Tasker es un paso crucial para la integración con WhatsApp. Aprenderemos cómo iniciar sesión correctamente, qué datos de acceso necesitamos y cómo solucionar posibles errores durante el proceso.",
 
-          videoUrl: "https://youtu.be/DbnRF3FS3jc",
+          videoUrl: "https://youtu.be/DbnRF3FS3jc", // Ejemplo, reemplazar
           downloads: [],
         },
         {
@@ -652,7 +692,7 @@
           content:
             "AutoResponder es una herramienta poderosa para automatizar respuestas en WhatsApp. En esta sección, aprenderemos cómo funciona la aplicación, cómo crear reglas personalizadas y cómo vincularla con Tasker para enviar mensajes y archivos automáticamente.",
 
-          videoUrl: "https://youtu.be/gHH3Q3ll2tw",
+          videoUrl: "https://youtu.be/gHH3Q3ll2tw", // Ejemplo, reemplazar
           downloads: [],
         },
         {
@@ -667,7 +707,7 @@
           content:
             "Para comenzar a enviar mensajes y archivos a través de WhatsApp, necesitamos configurar el plugin de AutoResponder. Aprenderemos cómo activar el plugin, configurar el envío de archivos y solucionar posibles problemas durante el proceso.",
 
-          videoUrl: "https://youtu.be/A3OJn6WcJgc",
+          videoUrl: "https://youtu.be/A3OJn6WcJgc", // Ejemplo, reemplazar
           downloads: [],
         },
         {
@@ -682,7 +722,7 @@
           content:
             "En esta sección, configuraremos la función de mensajes masivos en AutoResponder. Aprenderemos cómo exportar una plantilla de Google Sheets, configurar el ID y las columnas en el plugin y automatizar el proceso de envío de mensajes a través de WhatsApp.",
 
-          videoUrl: "https://youtu.be/hE4EwktRocA",
+          videoUrl: "https://youtu.be/hE4EwktRocA", // Ejemplo, reemplazar
           downloads: [
             {
               name: "Libro o plantilla de masivos y recordatorios",
@@ -701,7 +741,7 @@
           content:
             "En esta sección, configuraremos la función de recordatorios en el plugin. Aprenderemos cómo exportar una plantilla de Google Sheets, configurar el ID y las columnas en el plugin y automatizar el proceso de envío de mensajes a través de WhatsApp.",
 
-          videoUrl: "https://youtu.be/ERKphozidd8",
+          videoUrl: "https://youtu.be/ERKphozidd8", // Ejemplo, reemplazar
           downloads: [
             {
               name: "Libro o plantilla de masivos y recordatorios",
@@ -726,19 +766,17 @@
         if (version === "version1") {
           currentSlides = slidesVersion1;
         } else if (version === "version2") {
-          // Si la versión 2 está deshabilitada o no existe, no hacemos nada o manejamos el error
-          // Por ahora, si se intenta seleccionar una versión no activa, no cambiamos nada.
           const version2Button = document.querySelector(
             ".version-card button[disabled]"
           );
-          if (version2Button) return; // No hacer nada si el botón está deshabilitado
+          if (version2Button) return; 
           // currentSlides = slidesVersion2; // Descomentar si version2 se habilita
         } else {
-          return; // No hacer nada si la versión no es reconocida
+          return; 
         }
 
         localStorage.setItem("tutorialVersion", version);
-        currentSlideIndex = 0; // Siempre empezar desde el primer slide de la nueva versión
+        currentSlideIndex = 0; 
 
         document.getElementById("home-screen").classList.add("hidden");
         document.getElementById("slideContainer").classList.add("active");
@@ -750,7 +788,7 @@
         document.getElementById("stepNavigation").innerHTML = "";
         createSlides();
         createStepNavigation();
-        showSlide(currentSlideIndex); // Esto guardará el índice 0 en localStorage
+        showSlide(currentSlideIndex); 
       }
 
       function goHome() {
@@ -770,16 +808,18 @@
           const slideDiv = document.createElement("div");
           slideDiv.className = `slide ${
             index === currentSlideIndex ? "active" : ""
-          }`; // Asegurar que el slide correcto esté activo al crear
+          }`; 
 
           let videoEmbedUrl = "";
           const videoId = extractYouTubeId(slide.videoUrl);
 
           if (videoId) {
+            // Asegúrate de que esta URL de embed sea correcta y funcional
             videoEmbedUrl = `https://www.youtube.com/embed/${videoId}`;
           } else if (slide.videoUrl && slide.videoUrl.includes("/embed/")) {
-            videoEmbedUrl = slide.videoUrl;
+            videoEmbedUrl = slide.videoUrl; // Usar URL de embed directamente si ya está en ese formato
           }
+
 
           slideDiv.innerHTML = `
             <div class="slide-content">
@@ -814,7 +854,6 @@
 
       function extractYouTubeId(url) {
         if (!url) return null;
-        // Expresión regular mejorada para varios formatos de URL de YouTube
         const regExp =
           /^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|\&v=)([^#\&\?]*).*/;
         const match = url.match(regExp);
@@ -828,7 +867,7 @@
           const button = document.createElement("button");
           button.className = `step-button ${
             index === currentSlideIndex ? "active" : ""
-          }`; // Asegurar botón activo correcto
+          }`; 
           button.textContent = `Paso ${index + 1}`;
           button.addEventListener("click", () => showSlide(index));
           navigation.appendChild(button);
@@ -839,7 +878,6 @@
         const slideElements = document.querySelectorAll(".slide");
         const stepButtons = document.querySelectorAll(".step-button");
 
-        // Validar n
         if (n < 0 || n >= currentSlides.length) {
           console.error("Índice de slide inválido:", n);
           return;
@@ -856,11 +894,11 @@
           previousActiveStepButton.classList.remove("active");
         }
 
-        currentSlideIndex = n; // No es necesario modular aquí si n ya está validado
+        currentSlideIndex = n; 
 
         if (slideElements[currentSlideIndex]) {
           slideElements[currentSlideIndex].classList.add("active");
-          slideElements[currentSlideIndex].scrollTop = 0;
+          slideElements[currentSlideIndex].scrollTop = 0; 
         }
         if (stepButtons[currentSlideIndex]) {
           stepButtons[currentSlideIndex].classList.add("active");
@@ -868,7 +906,14 @@
 
         localStorage.setItem("currentSlideIndex", currentSlideIndex.toString());
         updateProgressBar();
+        updateNavigationButtons();
       }
+      
+      function updateNavigationButtons() {
+        document.getElementById('prevBtn').disabled = currentSlideIndex === 0;
+        document.getElementById('nextBtn').disabled = currentSlideIndex === currentSlides.length - 1;
+      }
+
 
       function updateProgressBar() {
         const progressBar = document.getElementById("progressBar");
@@ -877,19 +922,17 @@
             (currentSlideIndex / (currentSlides.length - 1)) * 100;
           progressBar.style.width = `${progress}%`;
         } else {
-          progressBar.style.width = "0%"; // O 100% si solo hay un slide y se considera completo
+          progressBar.style.width = currentSlides.length === 1 ? "100%" : "0%"; 
         }
       }
 
       document.getElementById("prevBtn").addEventListener("click", () => {
         if (currentSlideIndex > 0) {
-          // Solo ir al anterior si no es el primero
           showSlide(currentSlideIndex - 1);
         }
       });
       document.getElementById("nextBtn").addEventListener("click", () => {
         if (currentSlideIndex < currentSlides.length - 1) {
-          // Solo ir al siguiente si no es el último
           showSlide(currentSlideIndex + 1);
         }
       });
@@ -928,15 +971,13 @@
 
               createSlides();
               createStepNavigation();
-              showSlide(currentSlideIndex); // Muestra el slide y actualiza UI/localStorage
+              showSlide(currentSlideIndex); 
               restoredState = true;
             } else {
-              // Versión o índice de slide inválido guardado
               localStorage.removeItem("tutorialVersion");
               localStorage.removeItem("currentSlideIndex");
             }
           } else {
-            // Índice de slide no es un número
             localStorage.removeItem("currentSlideIndex");
           }
         }
@@ -950,6 +991,7 @@
           ).style.opacity = 0;
           document.querySelector(".navigation").style.opacity = 0;
         }
+         updateNavigationButtons(); // Asegurar estado inicial de botones
       };
     </script>
   </body>
