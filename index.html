@@ -165,6 +165,7 @@
         padding: 20px;
         width: 95%;
         max-width: 1200px;
+        margin-top: 30px;
         height: 90vh;
         position: absolute;
         display: flex;
@@ -419,10 +420,14 @@
         }
 
         .slide {
-          padding: 15px;
-          height: calc(
-            100vh - 70px
-          ); /* Ajustar altura para dejar espacio a las barras de navegación fijas */
+          .slide {
+            padding: 15px;
+            top: 30px; /* Baja el slide desde arriba */
+            position: absolute;
+            height: calc(
+              100vh - 100px
+            ); /* Ajusta la altura total si es necesario */
+          }
         }
         h1 {
           /* Título principal dentro de cada slide en móviles */
