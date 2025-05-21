@@ -3,7 +3,7 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Plugin para crear facilmente un chatboot para Whatsapp</title>
+    <title>Plugin para crear fácilmente un chatbot para Whatsapp</title>
     <style>
       @import url("https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;700&display=swap");
 
@@ -13,16 +13,149 @@
         padding: 0;
         font-family: "Roboto", sans-serif;
         height: 100%;
-        overflow: hidden;
+        /* Permitir el scroll en caso de desbordamiento */
+        overflow-y: hidden;
         background: #121212;
+        color: #e0e0e0; /* Color de texto general */
+
+        -ms-overflow-style: none; /* IE y Edge */
       }
+      body::-webkit-scrollbar,
+      html::-webkit-scrollbar {
+        display: none; /* Webkit (Chrome, Safari, Opera) */
+      }
+
+      /* Estilos para la pantalla de inicio */
+      #home-screen {
+        position: relative;
+        top: 0;
+        left: 0;
+        width: 100%;
+        min-height: 100vh; /* Usar min-height para permitir que el contenido empuje la altura */
+        background: #121212;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        /* Centrar verticalmente en pantallas grandes */
+        justify-content: center;
+        z-index: 100;
+        transition: opacity 0.5s ease;
+        padding: 20px;
+        box-sizing: border-box;
+      }
+
+      #home-screen.hidden {
+        opacity: 0;
+        pointer-events: none;
+        position: absolute;
+      }
+
+      #home-screen h1 {
+        color: #ffd700;
+        font-size: 2.5em;
+        margin-bottom: 40px; /* Margen por defecto para pantallas grandes */
+        text-align: center;
+      }
+
+      .version-selection {
+        display: flex;
+        gap: 30px;
+        flex-wrap: wrap;
+        justify-content: center;
+        padding-bottom: 50px; /* Espacio extra para asegurar que las cards no se recorten */
+      }
+
+      .version-card {
+        background: rgba(30, 30, 30, 0.95);
+        border-radius: 20px;
+        box-shadow: 0 8px 32px rgba(255, 215, 0, 0.2);
+        backdrop-filter: blur(4px);
+        border: 1px solid rgba(255, 215, 0, 0.18);
+        padding: 30px;
+        width: 300px;
+        text-align: center;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        position: relative;
+        overflow: hidden;
+      }
+
+      .version-card:hover {
+        transform: translateY(-10px) scale(1.02);
+        box-shadow: 0 12px 40px rgba(255, 215, 0, 0.3);
+      }
+
+      .version-card h2 {
+        color: #ffd700;
+        font-size: 1.8em;
+        margin-bottom: 15px;
+      }
+
+      .version-card p {
+        color: #a0a0a0;
+        font-size: 1em;
+        margin-bottom: 20px;
+      }
+
+      .version-card button {
+        background-color: #ffd700;
+        color: #121212;
+        padding: 10px 25px;
+        border: none;
+        border-radius: 25px;
+        font-size: 1.1em;
+        cursor: pointer;
+        transition: background-color 0.3s ease, transform 0.3s ease;
+      }
+
+      .version-card button:hover {
+        background-color: #ffa500;
+        transform: translateY(-2px);
+      }
+
+      /* Estilos para el botón deshabilitado */
+      .version-card button:disabled {
+        background-color: #555;
+        color: #999;
+        cursor: not-allowed;
+        transform: none;
+        box-shadow: none;
+      }
+
+      /* Estilo para la etiqueta "Muy Pronto" */
+      .coming-soon-tag {
+        position: absolute;
+        top: 10px;
+        right: 10px;
+        background-color: #ff4500; /* Naranja rojizo */
+        color: white;
+        padding: 5px 10px;
+        border-radius: 10px;
+        font-size: 0.8em;
+        font-weight: bold;
+        z-index: 1;
+      }
+
+      /* Estilos existentes del tutorial */
       .slide-container {
         height: 100%;
         display: flex;
         align-items: center;
         justify-content: center;
         perspective: 1000px;
+        opacity: 0;
+        pointer-events: none;
+        transition: opacity 0.5s ease;
       }
+      .slide-container.active {
+        opacity: 1;
+        pointer-events: auto;
+      }
+
       .slide {
         background: rgba(30, 30, 30, 0.95);
         border-radius: 20px;
@@ -39,12 +172,12 @@
         transition: opacity 0.5s ease, transform 0.5s ease;
         opacity: 0;
         transform: rotateY(-90deg);
-        overflow-y: auto;
-        scrollbar-width: none;
-        -ms-overflow-style: none;
+        overflow-y: auto; /* Permite el scroll interno del slide */
+        scrollbar-width: none; /* Oculta scrollbar en Firefox */
+        -ms-overflow-style: none; /* Oculta scrollbar en IE/Edge */
       }
       .slide::-webkit-scrollbar {
-        display: none;
+        display: none; /* Oculta scrollbar en Webkit (Chrome, Safari) */
       }
       .slide.active {
         opacity: 1;
@@ -56,6 +189,7 @@
         flex-direction: column;
       }
       h1 {
+        /* Título principal dentro de cada slide */
         color: #ffd700;
         font-size: 1.8em;
         margin-bottom: 10px;
@@ -77,9 +211,10 @@
 
       .video-container {
         width: 100%;
-        padding-bottom: 56.25%;
+        padding-bottom: 56.25%; /* 16:9 Aspect Ratio */
         position: relative;
         margin-bottom: 15px;
+        background-color: #000; /* Fondo negro para el contenedor del video */
       }
       .video-container iframe {
         position: absolute;
@@ -87,10 +222,11 @@
         left: 0;
         width: 100%;
         height: 100%;
+        border: none; /* Quitar borde del iframe */
       }
       .download-links {
         margin-top: 15px;
-        padding-bottom: 60px; /* Añadido espacio adicional en la parte inferior */
+        padding-bottom: 70px; /* Aumentado para más espacio si hay muchos links y botones de nav fijos */
       }
       .download-links a {
         color: #ffd700;
@@ -104,15 +240,21 @@
         text-decoration: none;
       }
       .navigation {
+        /* Contenedor de botones Anterior, Inicio, Siguiente */
         position: fixed;
-        bottom: 20px;
+        bottom: 20px; /* Posición por defecto para pantallas grandes */
         left: 50%;
         transform: translateX(-50%);
         display: flex;
         gap: 10px;
         z-index: 10;
+        justify-content: center;
+        align-items: center;
+        width: 90%; /* Asegurar que no sea demasiado ancho en pantallas muy grandes */
+        max-width: 500px; /* Limitar el ancho máximo */
       }
       button {
+        /* Estilo general para botones */
         padding: 10px 20px;
         font-size: 14px;
         cursor: pointer;
@@ -122,6 +264,7 @@
         border-radius: 30px;
         transition: all 0.3s ease;
         box-shadow: 0 4px 6px rgba(255, 215, 0, 0.1);
+        white-space: nowrap; /* Evita que el texto del botón se divida en múltiples líneas */
       }
       button:hover {
         background-color: #ffa500;
@@ -138,28 +281,29 @@
         z-index: 10;
       }
       .step-navigation-container {
+        /* Contenedor de botones de Paso 1, Paso 2, etc. */
         position: fixed;
-        top: 60px;
+        top: 60px; /* Posición por defecto para pantallas grandes */
         left: 0;
         right: 0;
         display: flex;
-        justify-content: flex-start;
+        justify-content: center;
+        align-items: center;
         z-index: 10;
-        overflow-x: auto;
+        overflow-x: auto; /* Permite scroll horizontal si los botones exceden el ancho */
         white-space: nowrap;
         -webkit-overflow-scrolling: touch;
-        scrollbar-width: none;
-        -ms-overflow-style: none;
+        scrollbar-width: none; /* Oculta scrollbar en Firefox */
+        -ms-overflow-style: none; /* Oculta scrollbar en IE/Edge */
         padding: 10px 0;
         background-color: rgba(18, 18, 18, 0.8);
       }
       .step-navigation-container::-webkit-scrollbar {
-        display: none;
+        display: none; /* Oculta scrollbar en Webkit */
       }
       .step-navigation {
         display: inline-flex;
         gap: 10px;
-        padding: 0 20px;
       }
       .step-button {
         padding: 5px 10px;
@@ -180,16 +324,49 @@
         background-color: #444;
       }
 
+      /* Estilos para el botón de regresar al inicio */
+      .back-to-home-button {
+        padding: 8px 15px; /* Padding por defecto */
+        font-size: 14px; /* Tamaño de fuente por defecto */
+        background-color: #555;
+        color: #fff;
+        border: none;
+        border-radius: 20px;
+        cursor: pointer;
+        transition: background-color 0.3s ease;
+        z-index: 11;
+      }
+
+      .back-to-home-button:hover {
+        background-color: #777;
+      }
+
       @media (min-width: 769px) {
+        /* Estilos para pantallas grandes */
+        #home-screen h1 {
+          font-size: 3.5em;
+        }
+        .version-card {
+          width: 350px;
+          padding: 40px;
+        }
+        .version-card h2 {
+          font-size: 2.2em;
+        }
+        .version-card p {
+          font-size: 1.1em;
+        }
+
         .video-container {
-          width: 60%;
-          padding-bottom: 33.75%;
-          margin: 0 auto 20px;
+          width: 60%; /* Ancho del video en pantallas grandes */
+          padding-bottom: 33.75%; /* 16:9 para el ancho de 60% */
+          margin: 0 auto 20px; /* Centrar video */
         }
         .slide {
           padding: 30px;
         }
         h1 {
+          /* Título principal dentro de cada slide en pantallas grandes */
           font-size: 2.2em;
         }
         .subSteps {
@@ -203,27 +380,54 @@
           font-size: 1em;
         }
         button {
+          /* Botones generales en pantallas grandes */
           padding: 12px 24px;
           font-size: 16px;
         }
         .step-button {
+          /* Botones de paso en pantallas grandes */
           padding: 8px 16px;
           font-size: 14px;
         }
         .step-navigation-container {
-          top: 2px;
-          justify-content: center;
+          /* Navegación de pasos en pantallas grandes */
+          top: 2px; /* Más pegado a la parte superior */
         }
       }
 
       @media (max-width: 768px) {
+        /* Estilos para pantallas móviles */
+        #home-screen {
+          justify-content: flex-start;
+          padding-top: 30px;
+        }
+        #home-screen h1 {
+          font-size: 2em;
+          margin-bottom: 20px;
+          margin-top: 1px;
+        }
+        .version-card {
+          width: 80%;
+          max-width: 300px;
+          padding: 20px;
+        }
+        .version-card h2 {
+          font-size: 1.5em;
+        }
+        .version-card p {
+          font-size: 0.9em;
+        }
+
         .slide {
           padding: 15px;
-          height: 95vh;
+          height: calc(
+            100vh - 70px
+          ); /* Ajustar altura para dejar espacio a las barras de navegación fijas */
         }
         h1 {
+          /* Título principal dentro de cada slide en móviles */
           font-size: 1.5em;
-          margin-top: 100px; /* Aumentado para dar espacio a los botones de navegación */
+          margin-top: 50px; /* Reducido, ya que step-navigation-container está en top:50px */
         }
         .subSteps {
           font-size: 0.9em;
@@ -235,25 +439,77 @@
         .download-links a {
           font-size: 0.9em;
         }
-        button {
-          padding: 8px 16px;
-          font-size: 12px;
+
+        /* Ajustes específicos para la barra de navegación principal en móviles */
+        .navigation {
+          top: 10px;
+          bottom: auto;
+          left: 50%;
+          transform: translateX(-50%);
+          width: calc(100% - 20px);
+          gap: 8px;
         }
+
+        .navigation button {
+          padding: 8px 12px;
+          font-size: 12px;
+          white-space: nowrap;
+        }
+
+        .navigation .back-to-home-button {
+          padding-left: 10px;
+          padding-right: 10px;
+          font-size: 11px;
+          flex-grow: 0;
+          flex-shrink: 1;
+        }
+
+        .navigation #prevBtn,
+        .navigation #nextBtn {
+          flex-grow: 1;
+          text-align: center;
+        }
+
         .step-button {
           padding: 4px 8px;
           font-size: 10px;
         }
+
         .step-navigation-container {
-          top: 50px;
+          top: 50px; /* Debajo de la barra de navegación principal (.navigation) */
         }
-        .navigation {
-          top: 10px;
-          bottom: auto;
+        h1 {
+          /* Título principal dentro de cada slide en móviles, necesita más margen superior */
+          font-size: 1.5em;
+          margin-top: 50px; /* Espacio para .step-navigation-container (top:50px + su padding) */
         }
       }
     </style>
   </head>
   <body>
+    <div id="home-screen">
+      <h1>Selecciona una Versión del Tutorial</h1>
+      <div class="version-selection">
+        <div class="version-card" onclick="selectVersion('version1')">
+          <h2>PLUGIN WHATSAPP</h2>
+          <p>
+            Crea tu chatbot fácilmente, haz campañas masivas de mensajes y envía
+            recordatorios con esta versión.
+          </p>
+          <button>Ver Versión 1</button>
+        </div>
+        <div class="version-card">
+          <div class="coming-soon-tag">¡Muy Pronto!</div>
+          <h2>CHATBOT CON IA (GEMINI)</h2>
+          <p>
+            Crea tu chatbot con IA fácilmente que responde a audios, imágenes y
+            documentos totalmente GRATIS con gemini AI.
+          </p>
+          <button disabled>Ver Versión 2</button>
+        </div>
+      </div>
+    </div>
+
     <div class="progress-bar" id="progressBar"></div>
     <div class="step-navigation-container">
       <div class="step-navigation" id="stepNavigation"></div>
@@ -261,11 +517,17 @@
     <div class="slide-container" id="slideContainer"></div>
     <div class="navigation">
       <button id="prevBtn">Anterior</button>
+      <button class="back-to-home-button" onclick="goHome()">
+        Volver al Inicio
+      </button>
       <button id="nextBtn">Siguiente</button>
     </div>
 
     <script>
-      const slides = [
+      // Definición de los datos de las diapositivas para la versión 1
+      // IMPORTANTE: Reemplaza 'videoUrl' con URLs reales de YouTube (ej. https://www.youtube.com/watch?v=ID_VIDEO)
+      // o URLs de embed (ej. https://www.youtube.com/embed/ID_VIDEO)
+      const slidesVersion1 = [
         {
           title: "Paso 1: Introducción Costos y Proceso",
           subSteps: ["1.1 Costos y Proceso", "1.2 Contenido del Tutorial"],
@@ -456,15 +718,72 @@
           ],
         },
       ];
-      let currentSlide = 0;
+
+      const slidesVersion2 = [
+        /* ... tus diapositivas para version2 ... */
+      ];
+
+      let currentSlides = [];
+      let currentSlideIndex = 0;
+
+      function selectVersion(version) {
+        if (version === "version1") {
+          currentSlides = slidesVersion1;
+        } else if (version === "version2") {
+          // Si la versión 2 está deshabilitada o no existe, no hacemos nada o manejamos el error
+          // Por ahora, si se intenta seleccionar una versión no activa, no cambiamos nada.
+          const version2Button = document.querySelector(
+            ".version-card button[disabled]"
+          );
+          if (version2Button) return; // No hacer nada si el botón está deshabilitado
+          // currentSlides = slidesVersion2; // Descomentar si version2 se habilita
+        } else {
+          return; // No hacer nada si la versión no es reconocida
+        }
+
+        localStorage.setItem("tutorialVersion", version);
+        currentSlideIndex = 0; // Siempre empezar desde el primer slide de la nueva versión
+
+        document.getElementById("home-screen").classList.add("hidden");
+        document.getElementById("slideContainer").classList.add("active");
+        document.getElementById("progressBar").style.opacity = 1;
+        document.querySelector(".step-navigation-container").style.opacity = 1;
+        document.querySelector(".navigation").style.opacity = 1;
+
+        document.getElementById("slideContainer").innerHTML = "";
+        document.getElementById("stepNavigation").innerHTML = "";
+        createSlides();
+        createStepNavigation();
+        showSlide(currentSlideIndex); // Esto guardará el índice 0 en localStorage
+      }
+
+      function goHome() {
+        document.getElementById("slideContainer").classList.remove("active");
+        document.getElementById("progressBar").style.opacity = 0;
+        document.querySelector(".step-navigation-container").style.opacity = 0;
+        document.querySelector(".navigation").style.opacity = 0;
+        document.getElementById("home-screen").classList.remove("hidden");
+
+        localStorage.removeItem("tutorialVersion");
+        localStorage.removeItem("currentSlideIndex");
+      }
 
       function createSlides() {
         const container = document.getElementById("slideContainer");
-        slides.forEach((slide, index) => {
+        currentSlides.forEach((slide, index) => {
           const slideDiv = document.createElement("div");
-          slideDiv.className = `slide ${index === 0 ? "active" : ""}`;
+          slideDiv.className = `slide ${
+            index === currentSlideIndex ? "active" : ""
+          }`; // Asegurar que el slide correcto esté activo al crear
 
+          let videoEmbedUrl = "";
           const videoId = extractYouTubeId(slide.videoUrl);
+
+          if (videoId) {
+            videoEmbedUrl = `https://www.youtube.com/embed/${videoId}`;
+          } else if (slide.videoUrl && slide.videoUrl.includes("/embed/")) {
+            videoEmbedUrl = slide.videoUrl;
+          }
 
           slideDiv.innerHTML = `
             <div class="slide-content">
@@ -475,14 +794,19 @@
                       .join("")}
                 </ul>
                 <p>${slide.content}</p>
+                ${
+                  videoEmbedUrl
+                    ? `
                 <div class="video-container">
-                    <iframe src="https://www.youtube.com/embed/${videoId}" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>
-                </div>
+                    <iframe src="${videoEmbedUrl}" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
+                </div>`
+                    : ""
+                }
                 <div class="download-links">
                     ${slide.downloads
                       .map(
                         (download) =>
-                          `<a href="${download.url}" target="_blank">🔗 ${download.name}</a>`
+                          `<a href="${download.url}" target="_blank" rel="noopener noreferrer">🔗 ${download.name}</a>`
                       )
                       .join("")}
                 </div>
@@ -493,6 +817,8 @@
       }
 
       function extractYouTubeId(url) {
+        if (!url) return null;
+        // Expresión regular mejorada para varios formatos de URL de YouTube
         const regExp =
           /^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|\&v=)([^#\&\?]*).*/;
         const match = url.match(regExp);
@@ -501,9 +827,12 @@
 
       function createStepNavigation() {
         const navigation = document.getElementById("stepNavigation");
-        slides.forEach((slide, index) => {
+        navigation.innerHTML = "";
+        currentSlides.forEach((slide, index) => {
           const button = document.createElement("button");
-          button.className = `step-button ${index === 0 ? "active" : ""}`;
+          button.className = `step-button ${
+            index === currentSlideIndex ? "active" : ""
+          }`; // Asegurar botón activo correcto
           button.textContent = `Paso ${index + 1}`;
           button.addEventListener("click", () => showSlide(index));
           navigation.appendChild(button);
@@ -513,30 +842,119 @@
       function showSlide(n) {
         const slideElements = document.querySelectorAll(".slide");
         const stepButtons = document.querySelectorAll(".step-button");
-        slideElements[currentSlide].classList.remove("active");
-        stepButtons[currentSlide].classList.remove("active");
-        currentSlide = (n + slides.length) % slides.length;
-        slideElements[currentSlide].classList.add("active");
-        stepButtons[currentSlide].classList.add("active");
+
+        // Validar n
+        if (n < 0 || n >= currentSlides.length) {
+          console.error("Índice de slide inválido:", n);
+          return;
+        }
+
+        const previousActiveSlide = document.querySelector(".slide.active");
+        if (previousActiveSlide) {
+          previousActiveSlide.classList.remove("active");
+        }
+        const previousActiveStepButton = document.querySelector(
+          ".step-button.active"
+        );
+        if (previousActiveStepButton) {
+          previousActiveStepButton.classList.remove("active");
+        }
+
+        currentSlideIndex = n; // No es necesario modular aquí si n ya está validado
+
+        if (slideElements[currentSlideIndex]) {
+          slideElements[currentSlideIndex].classList.add("active");
+          slideElements[currentSlideIndex].scrollTop = 0;
+        }
+        if (stepButtons[currentSlideIndex]) {
+          stepButtons[currentSlideIndex].classList.add("active");
+        }
+
+        localStorage.setItem("currentSlideIndex", currentSlideIndex.toString());
         updateProgressBar();
       }
 
       function updateProgressBar() {
         const progressBar = document.getElementById("progressBar");
-        const progress = (currentSlide / (slides.length - 1)) * 100;
-        progressBar.style.width = `${progress}%`;
+        if (currentSlides.length > 1) {
+          const progress =
+            (currentSlideIndex / (currentSlides.length - 1)) * 100;
+          progressBar.style.width = `${progress}%`;
+        } else {
+          progressBar.style.width = "0%"; // O 100% si solo hay un slide y se considera completo
+        }
       }
 
-      document
-        .getElementById("prevBtn")
-        .addEventListener("click", () => showSlide(currentSlide - 1));
-      document
-        .getElementById("nextBtn")
-        .addEventListener("click", () => showSlide(currentSlide + 1));
+      document.getElementById("prevBtn").addEventListener("click", () => {
+        if (currentSlideIndex > 0) {
+          // Solo ir al anterior si no es el primero
+          showSlide(currentSlideIndex - 1);
+        }
+      });
+      document.getElementById("nextBtn").addEventListener("click", () => {
+        if (currentSlideIndex < currentSlides.length - 1) {
+          // Solo ir al siguiente si no es el último
+          showSlide(currentSlideIndex + 1);
+        }
+      });
 
-      createSlides();
-      createStepNavigation();
-      updateProgressBar();
+      window.onload = function () {
+        const savedVersion = localStorage.getItem("tutorialVersion");
+        const savedSlideIndexString = localStorage.getItem("currentSlideIndex");
+        let restoredState = false;
+
+        if (savedVersion && savedSlideIndexString !== null) {
+          const savedSlideIndex = parseInt(savedSlideIndexString, 10);
+
+          if (!isNaN(savedSlideIndex)) {
+            if (savedVersion === "version1") {
+              currentSlides = slidesVersion1;
+            }
+            // else if (savedVersion === "version2") { // Si version2 se habilita
+            //    currentSlides = slidesVersion2;
+            // }
+
+            if (
+              currentSlides &&
+              currentSlides.length > 0 &&
+              savedSlideIndex >= 0 &&
+              savedSlideIndex < currentSlides.length
+            ) {
+              currentSlideIndex = savedSlideIndex;
+
+              document.getElementById("home-screen").classList.add("hidden");
+              document.getElementById("slideContainer").classList.add("active");
+              document.getElementById("progressBar").style.opacity = 1;
+              document.querySelector(
+                ".step-navigation-container"
+              ).style.opacity = 1;
+              document.querySelector(".navigation").style.opacity = 1;
+
+              createSlides();
+              createStepNavigation();
+              showSlide(currentSlideIndex); // Muestra el slide y actualiza UI/localStorage
+              restoredState = true;
+            } else {
+              // Versión o índice de slide inválido guardado
+              localStorage.removeItem("tutorialVersion");
+              localStorage.removeItem("currentSlideIndex");
+            }
+          } else {
+            // Índice de slide no es un número
+            localStorage.removeItem("currentSlideIndex");
+          }
+        }
+
+        if (!restoredState) {
+          document.getElementById("home-screen").classList.remove("hidden");
+          document.getElementById("slideContainer").classList.remove("active");
+          document.getElementById("progressBar").style.opacity = 0;
+          document.querySelector(
+            ".step-navigation-container"
+          ).style.opacity = 0;
+          document.querySelector(".navigation").style.opacity = 0;
+        }
+      };
     </script>
   </body>
 </html>
