@@ -11,7 +11,9 @@
       html {
         box-sizing: border-box;
       }
-      *, *:before, *:after {
+      *,
+      *:before,
+      *:after {
         box-sizing: inherit;
       }
 
@@ -304,7 +306,12 @@
         scrollbar-width: none; /* Oculta scrollbar en Firefox */
         -ms-overflow-style: none; /* Oculta scrollbar en IE/Edge */
         padding: 10px 5px; /* Añadido padding horizontal para que no peguen a los bordes */
-        background-color: rgba(18, 18, 18, 0.8); /* Fondo para mejor visibilidad */
+        background-color: rgba(
+          18,
+          18,
+          18,
+          0.8
+        ); /* Fondo para mejor visibilidad */
       }
       .step-navigation-container::-webkit-scrollbar {
         display: none; /* Oculta scrollbar en Webkit */
@@ -395,7 +402,7 @@
         }
 
         .download-links {
-            padding-bottom: 70px; /* Espacio para botones de nav fijos abajo en desktop */
+          padding-bottom: 70px; /* Espacio para botones de nav fijos abajo en desktop */
         }
         .download-links a {
           font-size: 1em;
@@ -410,9 +417,10 @@
           padding: 8px 16px;
           font-size: 14px;
         }
-        .navigation { /* Botones Anterior/Inicio/Siguiente en desktop */
-            bottom: 20px; /* Fijos abajo */
-            top: auto; /* Asegurar que no herede el top de mobile */
+        .navigation {
+          /* Botones Anterior/Inicio/Siguiente en desktop */
+          bottom: 20px; /* Fijos abajo */
+          top: auto; /* Asegurar que no herede el top de mobile */
         }
         .step-navigation-container {
           /* Navegación de pasos en pantallas grandes */
@@ -445,7 +453,7 @@
 
         .slide {
           padding: 15px; /* Padding interno del slide */
-          width: 100%;    /* Ocupar todo el ancho disponible */
+          width: 100%; /* Ocupar todo el ancho disponible */
           max-width: none; /* Sin max-width en móviles pequeños */
           border-radius: 0; /* Sin bordes redondeados para llenar pantalla */
           border-left: none;
@@ -458,7 +466,9 @@
           /* El .navigation (Prev/Home/Next) está en top: 10px, altura ~28px. Termina en 10+28=38px. */
           /* El .step-navigation-container está en top: 50px, altura ~38px. Termina en 50+38=88px. */
           top: 88px; /* Posicionar el slide debajo de todas las barras de navegación fijas superiores */
-          height: calc(100vh - 88px); /* El slide ocupa el resto de la altura del viewport */
+          height: calc(
+            100vh - 88px
+          ); /* El slide ocupa el resto de la altura del viewport */
           /* === FIN DE CORRECCIÓN PARA VISTA MÓVIL === */
         }
 
@@ -467,7 +477,7 @@
           font-size: 1.5em;
           /* margin-top: 80px; /* ANTERIOR: Demasiado margen interno */
           margin-top: 0px; /* CORREGIDO: Usar el padding del .slide (15px) para el espacio superior. */
-                           /* Opcional: un pequeño margen si se desea más espacio que el padding del slide: margin-top: 10px; */
+          /* Opcional: un pequeño margen si se desea más espacio que el padding del slide: margin-top: 10px; */
         }
         .subSteps {
           font-size: 0.9em;
@@ -477,18 +487,21 @@
         }
 
         .download-links {
-            /* padding-bottom: 70px; /* ANTERIOR: Demasiado padding si no hay barra inferior fija que esquivar */
-            padding-bottom: 20px; /* CORREGIDO: Espacio razonable al final del contenido */
+          /* padding-bottom: 70px; /* ANTERIOR: Demasiado padding si no hay barra inferior fija que esquivar */
+          padding-bottom: 20px; /* CORREGIDO: Espacio razonable al final del contenido */
         }
         .download-links a {
           font-size: 0.9em;
         }
 
         /* Ajustes específicos para la barra de navegación principal (.navigation) en móviles */
-        .navigation { /* Contenedor Anterior/Inicio/Siguiente */
-          top: 4px; /* Debajo de la barra de progreso (que tiene 4px de altura y está en top:0) */
+        .navigation {
+          /* Contenedor Anterior/Inicio/Siguiente */
+          top: 6px; /* Debajo de la barra de progreso (que tiene 4px de altura y está en top:0) */
           /* bottom: auto; /* Ya está implícito por 'top' */
-          width: calc(100% - 10px); /* Ligeramente menos ancho, para dar más padding a los lados de la pantalla */
+          width: calc(
+            100% - 10px
+          ); /* Ligeramente menos ancho, para dar más padding a los lados de la pantalla */
           gap: 5px; /* Menos espacio entre botones */
         }
 
@@ -519,7 +532,7 @@
 
         .step-navigation-container {
           /* .navigation (Prev/Home/Next) ahora está en top: 4px y tiene ~28px de altura. Termina en 4+28=32px. */
-          top: 36px; /* Debajo de .navigation. (32px + 4px de espacio) */
+          top: 40px; /* Debajo de .navigation. (32px + 4px de espacio) */
         }
       }
     </style>
@@ -549,13 +562,15 @@
     </div>
 
     <div class="progress-bar" id="progressBar"></div>
-    <div class="navigation"> <button id="prevBtn">Anterior</button>
+    <div class="navigation">
+      <button id="prevBtn">Anterior</button>
       <button class="back-to-home-button" onclick="goHome()">
         Volver al Inicio
       </button>
       <button id="nextBtn">Siguiente</button>
     </div>
-    <div class="step-navigation-container"> <div class="step-navigation" id="stepNavigation"></div>
+    <div class="step-navigation-container">
+      <div class="step-navigation" id="stepNavigation"></div>
     </div>
 
     <div class="slide-container" id="slideContainer"></div>
@@ -769,14 +784,14 @@
           const version2Button = document.querySelector(
             ".version-card button[disabled]"
           );
-          if (version2Button) return; 
+          if (version2Button) return;
           // currentSlides = slidesVersion2; // Descomentar si version2 se habilita
         } else {
-          return; 
+          return;
         }
 
         localStorage.setItem("tutorialVersion", version);
-        currentSlideIndex = 0; 
+        currentSlideIndex = 0;
 
         document.getElementById("home-screen").classList.add("hidden");
         document.getElementById("slideContainer").classList.add("active");
@@ -788,7 +803,7 @@
         document.getElementById("stepNavigation").innerHTML = "";
         createSlides();
         createStepNavigation();
-        showSlide(currentSlideIndex); 
+        showSlide(currentSlideIndex);
       }
 
       function goHome() {
@@ -808,7 +823,7 @@
           const slideDiv = document.createElement("div");
           slideDiv.className = `slide ${
             index === currentSlideIndex ? "active" : ""
-          }`; 
+          }`;
 
           let videoEmbedUrl = "";
           const videoId = extractYouTubeId(slide.videoUrl);
@@ -819,7 +834,6 @@
           } else if (slide.videoUrl && slide.videoUrl.includes("/embed/")) {
             videoEmbedUrl = slide.videoUrl; // Usar URL de embed directamente si ya está en ese formato
           }
-
 
           slideDiv.innerHTML = `
             <div class="slide-content">
@@ -867,7 +881,7 @@
           const button = document.createElement("button");
           button.className = `step-button ${
             index === currentSlideIndex ? "active" : ""
-          }`; 
+          }`;
           button.textContent = `Paso ${index + 1}`;
           button.addEventListener("click", () => showSlide(index));
           navigation.appendChild(button);
@@ -894,11 +908,11 @@
           previousActiveStepButton.classList.remove("active");
         }
 
-        currentSlideIndex = n; 
+        currentSlideIndex = n;
 
         if (slideElements[currentSlideIndex]) {
           slideElements[currentSlideIndex].classList.add("active");
-          slideElements[currentSlideIndex].scrollTop = 0; 
+          slideElements[currentSlideIndex].scrollTop = 0;
         }
         if (stepButtons[currentSlideIndex]) {
           stepButtons[currentSlideIndex].classList.add("active");
@@ -908,12 +922,12 @@
         updateProgressBar();
         updateNavigationButtons();
       }
-      
-      function updateNavigationButtons() {
-        document.getElementById('prevBtn').disabled = currentSlideIndex === 0;
-        document.getElementById('nextBtn').disabled = currentSlideIndex === currentSlides.length - 1;
-      }
 
+      function updateNavigationButtons() {
+        document.getElementById("prevBtn").disabled = currentSlideIndex === 0;
+        document.getElementById("nextBtn").disabled =
+          currentSlideIndex === currentSlides.length - 1;
+      }
 
       function updateProgressBar() {
         const progressBar = document.getElementById("progressBar");
@@ -922,7 +936,7 @@
             (currentSlideIndex / (currentSlides.length - 1)) * 100;
           progressBar.style.width = `${progress}%`;
         } else {
-          progressBar.style.width = currentSlides.length === 1 ? "100%" : "0%"; 
+          progressBar.style.width = currentSlides.length === 1 ? "100%" : "0%";
         }
       }
 
@@ -971,7 +985,7 @@
 
               createSlides();
               createStepNavigation();
-              showSlide(currentSlideIndex); 
+              showSlide(currentSlideIndex);
               restoredState = true;
             } else {
               localStorage.removeItem("tutorialVersion");
@@ -991,7 +1005,7 @@
           ).style.opacity = 0;
           document.querySelector(".navigation").style.opacity = 0;
         }
-         updateNavigationButtons(); // Asegurar estado inicial de botones
+        updateNavigationButtons(); // Asegurar estado inicial de botones
       };
     </script>
   </body>
